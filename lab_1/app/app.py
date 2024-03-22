@@ -1,35 +1,20 @@
 from flask import Flask, render_template
 import psycopg2
-import time
 
 app = Flask(__name__)
 
-def connect_to_db():
-    max_retries = 10
-    retry_delay = 5
-    attempts = 0
-    while attempts < max_retries:
-        try:
-            connection = psycopg2.connect(
-                dbname="students",
-                user="postgres",
-                password="postgres",
-                host="db"
-            )
-            return connection
-        except psycopg2.OperationalError:
-            print("Failed to connect to the database. Retrying...")
-            attempts += 1
-            time.sleep(retry_delay)
-    raise Exception("Failed to connect to the database after several attempts.")
-
-connection = connect_to_db()
-
 def execute_query(query):
+    connection = psycopg2.connect(
+        dbname="students",
+        user="postgres",
+        password="postgres",
+        host="db"
+    )
     cur = connection.cursor()
     cur.execute(query)
     result = cur.fetchall()
     cur.close()
+    connection.close()
     return result
 
 @app.route('/')

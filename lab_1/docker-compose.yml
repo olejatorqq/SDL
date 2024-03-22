@@ -1,10 +1,10 @@
 version: '3'
 
 services:
-  flask:
+  app:
     build:
       context: .
-      dockerfile: Dockerfile-flask
+      dockerfile: Dockerfile-app
       args:
         - PYTHON_VERSION=${PYTHON_VERSION}
     volumes:
@@ -24,7 +24,7 @@ services:
     ports:
       - "8085:80"
     depends_on:
-      - flask
+      - app
     networks:
       - app-network
 
