@@ -1,7 +1,10 @@
 from flask import Flask, render_template
 import psycopg2
+import os
 
 app = Flask(__name__)
+
+os.environ['TZ'] = 'Europe/Moscow'
 
 def execute_query(query):
     connection = psycopg2.connect(

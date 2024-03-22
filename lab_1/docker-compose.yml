@@ -1,10 +1,10 @@
-version: '3'
+version: '3.8'
 
 services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile-app
+      dockerfile: Dockerfile.app
       args:
         - PYTHON_VERSION=${PYTHON_VERSION}
     volumes:
@@ -13,12 +13,11 @@ services:
       - db
     networks:
       - app-network
-    
 
   nginx:
     build:
       context: .
-      dockerfile: Dockerfile-nginx
+      dockerfile: Dockerfile.nginx
       args:
         - NGINX_VERSION=${NGINX_VERSION}
     ports:
@@ -29,19 +28,19 @@ services:
       - app-network
 
   db:
-      build:
-        context: .
-        dockerfile: Dockerfile-postgres
-        args:
-          - POSTGRES_VERSION=${POSTGRES_VERSION}
-      volumes:
-        - ./postgres-data:/docker-entrypoint-initdb.d
-      environment:
-        POSTGRES_DB: students
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
-      networks:
-        - app-network
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+      args:
+        - POSTGRES_VERSION=${POSTGRES_VERSION}
+    volumes:
+      - ./postgres-data:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_DB: students
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - app-network
 
 networks:
   app-network:
