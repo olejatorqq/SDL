@@ -1,3 +1,5 @@
-FROM postgres:15.6
+ARG POSTGRES_VERSION
 
-COPY ./postgres-data /docker-entrypoint-initdb.d
+FROM postgres:${POSTGRES_VERSION}
+
+COPY ./postgres-data/students.sql /docker-entrypoint-initdb.d
