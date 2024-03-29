@@ -7,12 +7,19 @@ services:
       dockerfile: Dockerfile.app
       args:
         - PYTHON_VERSION=${PYTHON_VERSION}
+    security_opt:
+      - label=type:container_runtime_t
+      - label=disable
     volumes:
-      - ./app:/app
+      - ./app:/app:ro
     depends_on:
       - db
     networks:
       - app-network
+    pids_limit: 100
+    mem_limit: 300m
+    cpu_shares: 512
+    privileged: false
 
   nginx:
     build:
@@ -20,12 +27,19 @@ services:
       dockerfile: Dockerfile.nginx
       args:
         - NGINX_VERSION=${NGINX_VERSION}
+    security_opt:
+      - label=type:container_runtime_t
+      - label=disable
     ports:
-      - "8085:80"
+      - "127.0.0.1:8085:80"
     depends_on:
       - app
     networks:
       - app-network
+    pids_limit: 100
+    mem_limit: 200m
+    cpu_shares: 512
+    privileged: false
 
   db:
     build:
@@ -33,14 +47,21 @@ services:
       dockerfile: Dockerfile.postgres
       args:
         - POSTGRES_VERSION=${POSTGRES_VERSION}
+    security_opt:
+      - label=type:container_runtime_t
+      - label=disable
     volumes:
-      - ./postgres-data:/docker-entrypoint-initdb.d
+      - ./postgres-data:/docker-entrypoint-initdb.d:ro
     environment:
       POSTGRES_DB: students
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     networks:
       - app-network
+    pids_limit: 100
+    mem_limit: 200m
+    cpu_shares: 512
+    privileged: false
 
 networks:
   app-network:

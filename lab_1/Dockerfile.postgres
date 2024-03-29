@@ -2,4 +2,7 @@ ARG POSTGRES_VERSION
 
 FROM postgres:${POSTGRES_VERSION}
 
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD pg_isready -q -d students -U postgres || exit 1
+
 COPY ./postgres-data/students.sql /docker-entrypoint-initdb.d/
