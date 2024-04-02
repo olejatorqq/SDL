@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Start') {
+            steps {
+                sh './start.sh'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'docker-compose run app python -m pytest'
+            }
+        }
+        stage('Stop') {
+            steps {
+                sh './stop.sh'
+            }
+        }
+    }
+}
